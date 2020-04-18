@@ -1,0 +1,124 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    max-width: 100%;
+}
+
+.title {
+    color: #999;
+    text-transform: uppercase;
+    margin: 30px 0;
+}
+
+.active img {
+    background: green;
+}
+
+img.carts {
+    max-width: 160px;
+}
+
+img.cart {
+    max-width: 145px;
+}
+
+.position-toast {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 9999;
+}
+
+.balao2 {
+    margin: 0 auto;
+    background: #7e57c2;
+    font-family: 'open sans';
+    font-size: 0.85em;
+    line-height: 1.6em;
+    border-radius: 15px;
+    color: #fff;
+    padding: 20px;
+    position: relative;
+    margin-bottom: 30px;
+    width: 210px;
+    animation: spin 1.5s infinite;
+}
+
+@keyframes spin {
+    from {
+        top: -10px;
+    }
+
+    to {
+        top: 4px;
+    }
+}
+
+.balao2:after {
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 20px solid #7e57c2;
+    bottom: -20px;
+    left: 40%;
+}
+
+.img-round {
+    animation: rounder 0.3s infinite;
+}
+
+@keyframes rounder {
+    0% {
+        transform: rotatez(0deg);
+    }
+
+    100% {
+        transform: rotatez(360deg);
+    }
+}
+
+.animacao-right {
+    z-index: 10000;
+    animation: vencedor-right 3s 1;
+    animation-fill-mode: forwards;
+    /*animation-direction: reverse;*/
+}
+
+.animacao-left {
+    z-index: 10000;
+    animation: vencedor-left 3s 1;
+    animation-fill-mode: forwards;
+    /*animation-direction: reverse;*/
+}
+
+@keyframes vencedor-right {
+    from {
+        top: 0px;
+        left: 0px;
+    }
+
+    to {
+        left: 290px;
+        top: 280px;
+
+    }
+}
+
+@keyframes vencedor-left {
+    from {
+        top: 0px;
+        right: 0px;
+    }
+
+    to {
+        right: 290px;
+        top: 280px;
+
+    }
+}

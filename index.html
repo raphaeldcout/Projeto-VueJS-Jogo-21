@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <title>Jogo 21 Vue JS</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" 
+            integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+            
+        <link rel="stylesheet" href="css/style.css">
+
+        <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
+        
+    </head>
+    <body>
+        <div id="app" class="container text-center">
+            <div aria-live="polite" aria-atomic="true" style="position: relative;">
+                <div class="toast position-toast" :class="modal.status ? 'show' : 'hide'">
+                    <div class="toast-header">
+                        <strong class="mr-auto">{{modal.title}}</strong>
+                        <small>{{time}}</small>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close" @click="modelClose">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        {{modal.body}}
+                    </div>
+                </div>
+            </div>
+            <h1 class="title">Jogo do 21 com Vue JS</h1>
+
+            <div class="row">
+                <div class="col-6" :class="{'animacao-right': vencedor.vencedor == 1}">
+                    <div class="balao2" :class="activeBaloes ? 'd-block' : 'd-none'">
+                        Jogador (a) Raphael
+                    </div>
+                    <div class="col-12" :class="{active: jogador == 1}" @click="jogadorSelecionado(1)">
+                        <img src="assets/player1.png" alt="Jogador 1">
+                        <p>Hey, brow!</p>
+                        <span v-if="jogador > 0" class="badge badge-success">{{points.player1}}</span>
+                    </div>
+                </div>
+                <div class="col-6" :class="{'animacao-left': vencedor.vencedor == 2}">
+                    <div class="balao2" :class="activeBaloes ? 'd-block' : 'd-none'">
+                        Jogador (a) Fernanda
+                    </div>
+                    <div class="col-12" :class="{active: jogador == 2}" @click="jogadorSelecionado(2)">
+                        <img src="assets/player2.png" alt="Jogador 1">
+                        <p>Oláa :)</p>
+                        <span v-if="jogador > 0" class="badge badge-success">{{points.player2}}</span>
+                    </div>
+                </div>
+
+                <div class="col-12 mb-2">
+                    <a href="#!" class="btn btn-success btn-lg btn-block" :class="{'d-none': iniciar}" @click.prevent="iniciarJogo">Iniciar Jogo. Vamos nessa!</a>
+                </div>
+                
+                <div class="controls col-12 d-none" :class="{'d-block': iniciar}">
+                    <a href="#!" class="btn btn-warning text-white" @click.prevent="passarVez">Pular Vez</a>
+                    <a href="#!" class="btn btn-danger" @click.prevent="resete">Resetar</a>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-12 vencedor" v-if="vencedor.status">
+                    <h1>VENCEDOR!!! PARABÉNS.</h1>
+                    <img src="assets/vencedor.gif" alt="Vencedor" class="">
+                </div>
+                <div class="col-6" v-if="!vencedor.status">
+                    <a href="#!" @click.prevent="selecionarCarta">
+                        <img src="assets/baralho-cartas.png" alt="Baralho" class="carts">
+                    </a>
+                </div>
+                <div class="col-6" v-if="!vencedor.status">
+                    <img :src="img" alt="Carta" class="cart" :class="loading ? 'img-round' : 'img-stop'">
+                    <!-- Uma alternativa para concatenar diretamente no elemnto:
+                        :src="'assets/carts/'+ variavel a ser usada +'.png'"
+                    -->
+                </div>
+            </div>
+        </div>
+
+        <script src="./vue.js"></script>
+        <script>
+            new Vue({
+                el: "#app",
+                data:{
+                    jogador: 0,
+                    points:{
+                        player1 : 0,
+                        player2 : 0
+                    },
+                    iniciar: false,
+                    time: "",
+                    activeBaloes: false,
+                    modal:{
+                        status: false,
+                        title: "",
+                        body: ""
+                    },
+                    img: "",
+                    loading: false,
+                    vencedor: {
+                        status : false,
+                        vencedor : 0
+                    },
+                },
+                methods:{
+                    passarVez: function (reu = true) {
+                        if(this.jogador == 0 || reu === 0){
+                            this.modal.status = true;
+                            this.modal.title = reu === 0 ? "INICIE O JOGO" : "SELECIONE SEU PLAYER";
+                            this.modal.body = reu === 0 ? "Click em iniciar para escolher seu personagem." : "Click no jogador que deve iniciar jogando.";
+                        }else{
+                            this.jogador = this.jogador == 1 ? 2 : 1;
+                        }
+                    },
+                    iniciarJogo(event){
+                        this.iniciar = true;
+                        this.modal.status = true;
+                        this.modal.title = "JOGO INICIADO";
+                        this.modal.body = "Click no jogador que deve iniciar jogando.";
+                        this.activeBaloes = true;
+                        this.time = "agora";
+                    },
+                    modelClose: function () {
+                        this.modal.status = false;
+                    },
+                    jogadorSelecionado(n){
+                        if(!this.iniciar) return this.passarVez(0);
+                        this.activeBaloes = false;
+                        this.modal.status = true;
+                        this.modal.title = "HORA DE JOGAR";
+                        this.modal.body = "Click na carta para jogar. Boa sorte!";
+                        this.img = "assets/carts/int.png";
+                        return this.iniciar ? this.jogador = n : '';
+                    },
+                    selecionarCarta: function () {
+                        if(!this.iniciar || this.jogador == 0)
+                            return this.iniciarJogo();
+                        
+                        this.img = "assets/carts/int.png";
+                        vm = this;
+                        this.loading = true;
+                        setTimeout(function () { 
+                            vm.loading = false;
+                            if (vm.jogador == 1) {
+                                n = Math.floor((Math.random() * 13) + 1);
+                                console.log(n);
+                                vm.points.player1 += n;
+                                vm.img = "assets/carts/" + n + ".png";
+
+                                if(vm.points.player1 == 21){
+                                    vm.modal.status = true;
+                                    vm.modal.title = "PARABÉNSS";
+                                    vm.modal.body = "Você tem muuita sorte!";
+                                    vm.jogador = 1;
+                                    vm.vencedor.status = true;
+                                    vm.vencedor.vencedor = 1;
+                                    return;
+                                }
+
+                                if(vm.points.player1 > 21){
+                                    vm.modal.status = true;
+                                    vm.modal.title = "PARABÉNSS";
+                                    vm.modal.body = "Você tem muuita sorte!";
+                                    vm.jogador = 2; 
+                                    vm.vencedor.status = true;
+                                    vm.vencedor.vencedor = 2;
+                                    return;
+                                } 
+                                    
+                                vm.jogador = 2;
+                            } else {
+                                n = Math.floor((Math.random() * 13) + 1);
+                                console.log(n);
+                                vm.points.player2 += n;
+                                vm.img = "assets/carts/" + n + ".png";
+
+                                if (vm.points.player2 == 21) {
+                                    vm.modal.status = true;
+                                    vm.modal.title = "PARABÉNSS";
+                                    vm.modal.body = "Você tem muuita sorte!";
+                                    vm.jogador = 2;
+                                    vm.vencedor.status = true;
+                                    vm.vencedor.vencedor = 2;
+                                    return;
+                                }
+
+                                if (vm.points.player2 > 21){
+                                    vm.modal.status = true;
+                                    vm.modal.title = "PARABÉNSS";
+                                    vm.modal.body = "Você tem muuita sorte!";
+                                    vm.jogador = 1; 
+                                    vm.vencedor.status = true;
+                                    vm.vencedor.vencedor = 1;
+                                    return;
+                                }
+
+                                vm.jogador = 1;
+                            }
+                            
+                        }, 1200);
+                    },
+                    resete(){
+                        document.location.reload(true);
+                    }
+                },
+                watch: {
+                    time(val) {
+
+                    }
+                },
+                created: function() {
+                    this.img = "assets/carts/1.png";
+                },
+            })
+        </script>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+            integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+            crossorigin="anonymous"></script>
+    </body>
+</html>

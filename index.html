@@ -34,7 +34,7 @@
             <div class="row">
                 <div class="col-6" :class="{'animacao-right': vencedor.vencedor == 1}">
                     <div class="balao2" :class="activeBaloes ? 'd-block' : 'd-none'">
-                        Jogador (a) Raphael
+                        Jogador (a) Dean
                     </div>
                     <div class="col-12" :class="{active: jogador == 1}" @click="jogadorSelecionado(1)">
                         <img src="assets/player1.png" alt="Jogador 1">
@@ -44,7 +44,7 @@
                 </div>
                 <div class="col-6" :class="{'animacao-left': vencedor.vencedor == 2}">
                     <div class="balao2" :class="activeBaloes ? 'd-block' : 'd-none'">
-                        Jogador (a) Fernanda
+                        Jogador (a) Paula
                     </div>
                     <div class="col-12" :class="{active: jogador == 2}" @click="jogadorSelecionado(2)">
                         <img src="assets/player2.png" alt="Jogador 1">
